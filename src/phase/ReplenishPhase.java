@@ -2,6 +2,7 @@
 package phase;
 
 import game.Game;
+import player.HumanPlayer;
 import player.Player;
 
 public class ReplenishPhase implements Phase {
@@ -12,6 +13,11 @@ public class ReplenishPhase implements Phase {
                 var next = game.getRedDeck().draw(); // returns RedAppleCard
                 if (next == null) break;             // deck empty safeguard
                 p.receiveCard(next);                 // upcasts to Card automatically
+            }
+        }
+        for (Player p : game.getPlayers()) {
+            if (p instanceof HumanPlayer hp) {
+                hp.showHand();
             }
         }
         System.out.println("🔄 Hands replenished!");

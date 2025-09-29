@@ -74,6 +74,7 @@ public class HumanPlayer implements Player {
     @Override
     public void receiveCard(Card card) {
         hand.add(card);
+        //out.println("You received: " + card.getText());
     }
 
     @Override
@@ -95,6 +96,12 @@ public class HumanPlayer implements Player {
         } catch (Exception e) {
             out.println("⚠ Invalid choice, picking first card.");
             return submissions.get(0);
+        }
+    }
+    public void showHand() {
+        out.println("Your current hand:");
+        for (int i = 0; i < hand.size(); i++) {
+            out.println(i + ": " + hand.get(i).getText());
         }
     }
 }
