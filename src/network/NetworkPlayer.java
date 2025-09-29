@@ -11,13 +11,13 @@ import java.util.List;
 public class NetworkPlayer implements Player {
     private String name;
     private List<Card> hand = new ArrayList<>();
-    private Socket socket;
+    //private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
 
     public NetworkPlayer(String name, Socket socket) throws IOException {
         this.name = name;
-        this.socket = socket;
+        //this.socket = socket;
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
