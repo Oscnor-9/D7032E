@@ -79,22 +79,22 @@ public class HumanPlayer implements Player {
 
     @Override
     public Card selectWinner(List<Card> submissions) {
+        out.println("JUDGE_TURN");   // marker: judge mode started
+
+        // Send the cards to choose from
+        for (int i = 0; i < submissions.size(); i++) {
+            out.println(i + ": " + submissions.get(i).getText());
+        }
+
+        out.println("END_CHOICES");  // marker: finished sending options
+        out.println("Choose index: ");
+
         try {
-            // Send a protocol marker for the client
-            out.println("JUDGE_TURN");
-            out.println("Choose the winning card:");
-            for (int i = 0; i < submissions.size(); i++) {
-                out.println(i + ": " + submissions.get(i).getText());
-            }
-
-            // Read input
-            String input = in.readLine();
-            System.out.println("DEBUG [" + name + "] judged index: " + input);
-
-            int index = Integer.parseInt(input.trim());
-            return submissions.get(index);
+            String line = in.readLine();
+            int choice = Integer.parseInt(line);
+            return submissions.get(choice);
         } catch (Exception e) {
-            out.println("Invalid choice, picking first card.");
+            out.println("Invalid input, defaulting to 0");
             return submissions.get(0);
         }
     }
