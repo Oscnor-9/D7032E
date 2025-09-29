@@ -7,7 +7,8 @@ import game.Game;
 import io.FileCardLoader;
 import network.GameServer;
 import player.BotPlayer;
-//import player.HumanPlayer;
+import player.HumanPlayer;
+import player.HumanPlayer;
 import player.Player;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class ServerMain {
             }
 
             // Add optional bots
+            server.addPlayer(HumanPlayer.local("Oscar"));
             server.addPlayer(new BotPlayer("Bot 1"));
             server.addPlayer(new BotPlayer("Bot 2"));
 

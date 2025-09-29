@@ -66,7 +66,7 @@ public class HumanPlayer implements Player {
             int index = Integer.parseInt(input.trim());
             return hand.remove(index);
         } catch (Exception e) {
-            out.println("⚠ Invalid choice, using first card.");
+            out.println("Invalid choice, using first card.");
             return hand.remove(0);
         }
     }
@@ -94,7 +94,7 @@ public class HumanPlayer implements Player {
             int index = Integer.parseInt(input.trim());
             return submissions.get(index);
         } catch (Exception e) {
-            out.println("⚠ Invalid choice, picking first card.");
+            out.println("Invalid choice, picking first card.");
             return submissions.get(0);
         }
     }
