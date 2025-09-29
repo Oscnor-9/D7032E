@@ -26,6 +26,10 @@ public class GameClient {
                 if (line.equals("YOUR_TURN")) {
                     System.out.print("Choose index: ");
                     String choice = scanner.nextLine();
+                    // discard any spammed extra input
+                    while (scanner.hasNextLine()) {
+                        scanner.nextLine();
+                    }
                     out.println(choice);
 
                 } else if (line.equals("JUDGE_TURN")) {
@@ -35,6 +39,10 @@ public class GameClient {
                 } else if (line.equals("END_CHOICES") && judgeMode) {
                     System.out.print("Pick winning card index: ");
                     String choice = scanner.nextLine();
+                    // discard any spammed extra input
+                    while (scanner.hasNextLine()) {
+                        scanner.nextLine();
+                    }
                     out.println(choice);
                     judgeMode = false;
 
@@ -45,3 +53,4 @@ public class GameClient {
         }
     }
 }
+
