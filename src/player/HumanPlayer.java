@@ -13,11 +13,11 @@ public class HumanPlayer implements Player {
     private final BufferedReader in;
     private final PrintWriter out;
 
-    // Generic constructor: any Reader/Writer
+    // Core constructor: Reader for input, PrintWriter for output
     public HumanPlayer(String name, Reader reader, PrintWriter writer) {
         this.name = name;
         this.in = new BufferedReader(reader);
-        this.out = writer;
+        this.out = writer; // already autoFlush = true
     }
 
     // Local console human
@@ -29,12 +29,12 @@ public class HumanPlayer implements Player {
         );
     }
 
- // Remote human (socket-based)
+    // Remote human (socket-based)
     public static HumanPlayer remote(String name, Socket socket) throws IOException {
         return new HumanPlayer(
                 name,
                 new InputStreamReader(socket.getInputStream()),
-                new PrintWriter(socket.getOutputStream(), true)  // autoFlush = true
+                new PrintWriter(socket.getOutputStream(), true) // autoFlush
         );
     }
 
@@ -51,12 +51,19 @@ public class HumanPlayer implements Player {
     @Override
     public Card playCard() {
         try {
+            // Send a protocol marker for the client
+            out.println("YOUR_TURN");
             out.println("Your hand:");
             for (int i = 0; i < hand.size(); i++) {
                 out.println(i + ": " + hand.get(i).getText());
             }
             out.println("Choose a card index:");
-            int index = Integer.parseInt(in.readLine());
+
+            // Read input
+            String input = in.readLine();
+            System.out.println("DEBUG [" + name + "] chose index: " + input);
+
+            int index = Integer.parseInt(input.trim());
             return hand.remove(index);
         } catch (Exception e) {
             out.println("⚠ Invalid choice, using first card.");
@@ -72,11 +79,18 @@ public class HumanPlayer implements Player {
     @Override
     public Card selectWinner(List<Card> submissions) {
         try {
+            // Send a protocol marker for the client
+            out.println("JUDGE_TURN");
             out.println("Choose the winning card:");
             for (int i = 0; i < submissions.size(); i++) {
                 out.println(i + ": " + submissions.get(i).getText());
             }
-            int index = Integer.parseInt(in.readLine());
+
+            // Read input
+            String input = in.readLine();
+            System.out.println("DEBUG [" + name + "] judged index: " + input);
+
+            int index = Integer.parseInt(input.trim());
             return submissions.get(index);
         } catch (Exception e) {
             out.println("⚠ Invalid choice, picking first card.");
@@ -84,4 +98,3 @@ public class HumanPlayer implements Player {
         }
     }
 }
-
