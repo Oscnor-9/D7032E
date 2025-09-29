@@ -14,10 +14,10 @@ public class HumanPlayer implements Player {
     private final PrintWriter out;
 
     // Generic constructor: any Reader/Writer
-    public HumanPlayer(String name, Reader reader, Writer writer) {
+    public HumanPlayer(String name, Reader reader, PrintWriter writer) {
         this.name = name;
         this.in = new BufferedReader(reader);
-        this.out = new PrintWriter(writer, true);
+        this.out = writer;
     }
 
     // Local console human
@@ -25,16 +25,16 @@ public class HumanPlayer implements Player {
         return new HumanPlayer(
                 name,
                 new InputStreamReader(System.in),
-                new OutputStreamWriter(System.out)
+                new PrintWriter(System.out, true)  // autoFlush
         );
     }
 
-    // Remote human (socket-based)
+ // Remote human (socket-based)
     public static HumanPlayer remote(String name, Socket socket) throws IOException {
         return new HumanPlayer(
                 name,
                 new InputStreamReader(socket.getInputStream()),
-                new OutputStreamWriter(socket.getOutputStream())
+                new PrintWriter(socket.getOutputStream(), true)  // autoFlush = true
         );
     }
 
