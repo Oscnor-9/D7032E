@@ -14,12 +14,12 @@ public class ReplenishPhase implements Phase {
                 if (next == null) break;             // deck empty safeguard
                 p.receiveCard(next);                 // upcasts to Card automatically
             }
-        }
+        }/*
         for (Player p : game.getPlayers()) {
             if (p instanceof HumanPlayer hp) {
                 hp.showHand();
             }
-        }
+        }*/
         System.out.println("🔄 Hands replenished!");
     }
 }

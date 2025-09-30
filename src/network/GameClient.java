@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class GameClient {
     private final Socket socket;
@@ -17,36 +16,43 @@ public class GameClient {
     public void start() throws IOException {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             Scanner scanner = new Scanner(System.in)) {
+             BufferedReader console = new BufferedReader(new InputStreamReader(System.in))) {
 
             String line;
             boolean judgeMode = false;
 
+            System.out.println("Connected to server!");
+
             while ((line = in.readLine()) != null) {
-                if (line.equals("YOUR_TURN")) {
+                if ("YOUR_TURN".equals(line)) {
                     System.out.print("Choose index: ");
-                    String choice = scanner.nextLine();
-                    // discard any spammed extra input
-                    while (scanner.hasNextLine()) {
-                        scanner.nextLine();
+                    String choice = console.readLine();
+
+                    // 🔧 non-blocking drain of extra spammed lines
+                    while (console.ready()) {
+                        console.readLine();
                     }
+
                     out.println(choice);
 
-                } else if (line.equals("JUDGE_TURN")) {
+                } else if ("JUDGE_TURN".equals(line)) {
                     System.out.println("You are the judge! Cards to choose from:");
                     judgeMode = true;
 
-                } else if (line.equals("END_CHOICES") && judgeMode) {
+                } else if (judgeMode && "END_CHOICES".equals(line)) {
                     System.out.print("Pick winning card index: ");
-                    String choice = scanner.nextLine();
-                    // discard any spammed extra input
-                    while (scanner.hasNextLine()) {
-                        scanner.nextLine();
+                    String choice = console.readLine();
+
+                    // 🔧 non-blocking drain of extra spammed lines
+                    while (console.ready()) {
+                        console.readLine();
                     }
+
                     out.println(choice);
                     judgeMode = false;
 
                 } else {
+                    // normal server message (card list, prompts, etc.)
                     System.out.println("SERVER: " + line);
                 }
             }
