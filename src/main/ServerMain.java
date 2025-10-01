@@ -41,8 +41,9 @@ public class ServerMain {
             players.add(new BotPlayer("Bot" + i));
         }
 
-        try (ServerSocket serverSocket = new ServerSocket(12345)) {
-            System.out.println("✅ Server running on port 12345, waiting for " + numRemote + " players...");
+        try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 = ask OS for free port
+            int port = serverSocket.getLocalPort();
+            System.out.println("✅ Server running on port " + port + ", waiting for " + numRemote + " players...");
 
             // Wait until all remote players have connected
             for (int i = 1; i <= numRemote; i++) {
@@ -60,10 +61,10 @@ public class ServerMain {
 
                 players.add(remote);
             }
-        }
 
-        // ✅ Start game once all players are connected
-        Game game = new Game(greenDeck, redDeck, players);
-        game.start();
+            // ✅ Start game once all players are connected
+            Game game = new Game(greenDeck, redDeck, players);
+            game.start();
+        }
     }
 }
