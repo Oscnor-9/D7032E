@@ -1,36 +1,27 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import card.Deck;
 import card.GreenAppleCard;
 import card.RedAppleCard;
-import game.Game;
-import io.FileCardLoader;
-import player.BotPlayer;
 import player.HumanPlayer;
 import player.Player;
+import player.BotPlayer;
+import ui.ConsoleInput;
+import ui.ConsoleUI;
+import game.Game;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocalMain {
-    public static void main(String[] args) {
-        try {
-            Deck<GreenAppleCard> greenDeck =
-                new Deck<>(FileCardLoader.loadCards("greenApples.txt", GreenAppleCard::new));
-            Deck<RedAppleCard> redDeck =
-                new Deck<>(FileCardLoader.loadCards("redApples.txt", RedAppleCard::new));
-
-            List<Player> players = new ArrayList<>();
-            players.add(HumanPlayer.local("Oscar"));
-            players.add(new BotPlayer("Bot Alice"));
-            players.add(new BotPlayer("Bot Bob"));
-
-            Game game = new Game(greenDeck, redDeck, players);
-            game.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void start(Deck<GreenAppleCard> greenDeck, Deck<RedAppleCard> redDeck, int numOfBots) {
+        List<Player> players = new ArrayList<>();
+        players.add(new HumanPlayer("Host", new ConsoleUI(), new ConsoleInput()));
+        for (int i = 1; i <= numOfBots; i++) {
+            players.add(new BotPlayer("Bot" + i));
         }
+
+        Game game = new Game(greenDeck, redDeck, players);
+        game.start();
     }
-
-
 }

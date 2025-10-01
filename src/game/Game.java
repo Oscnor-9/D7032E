@@ -69,7 +69,7 @@ public class Game{
 	        nextJudge();        // rotate judge
 	    }
 
-	    System.out.println("🎉 Winner: " + getWinner().getName());
+	    System.out.println("Winner: " + getWinner().getName());
 	}
 	
 	// ------------------------------------------------------------
@@ -149,8 +149,6 @@ public class Game{
         return scores.values().stream()
                 .mapToInt(List::size)
                 .sum();
-    }
-    
-    
+    }  
 }
 

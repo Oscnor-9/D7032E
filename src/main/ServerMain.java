@@ -3,55 +3,46 @@ package main;
 import card.Deck;
 import card.GreenAppleCard;
 import card.RedAppleCard;
+import player.*;
+import ui.ConsoleInput;
+import ui.ConsoleUI;
+import ui.NetworkInput;
+import ui.NetworkUI;
 import game.Game;
-import io.FileCardLoader;
-import network.GameServer;
-import player.BotPlayer;
-import player.HumanPlayer;
-import player.HumanPlayer;
-import player.Player;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ServerMain {
-    public static void main(String[] args) {
-        int port = 12345;
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
-        }
+    public static void start(Deck<GreenAppleCard> greenDeck, Deck<RedAppleCard> redDeck, int numOfBots) throws Exception {
+        List<Player> players = new ArrayList<>();
+        players.add(new HumanPlayer("Host", new ConsoleUI(), new ConsoleInput()));
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("How many remote players should join? ");
-        int expectedClients = Integer.parseInt(scanner.nextLine().trim());
+        try (ServerSocket serverSocket = new ServerSocket(12345)) {
+            System.out.println("✅ Server running on port 12345");
+            Socket clientSocket = serverSocket.accept();
 
-        try {
-            // Load decks
-            Deck<GreenAppleCard> greenDeck =
-                new Deck<>(FileCardLoader.loadCards("greenApples.txt", GreenAppleCard::new));
-            Deck<RedAppleCard> redDeck =
-                new Deck<>(FileCardLoader.loadCards("redApples.txt", RedAppleCard::new));
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter out   = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            // Start server
-            GameServer server = new GameServer(port);
+            HumanPlayer remote = new HumanPlayer(
+                "Remote1",
+                new NetworkUI(out),
+                new NetworkInput(in)
+            );
 
-            // Wait for remote players
-            for (int i = 1; i <= expectedClients; i++) {
-                server.acceptRemotePlayer("RemotePlayer" + i);
+            players.add(remote);
+            for (int i = 1; i <= numOfBots; i++) {
+                players.add(new BotPlayer("Bot" + i));
             }
 
-            // Add optional bots
-            server.addPlayer(HumanPlayer.local("Oscar"));
-            server.addPlayer(new BotPlayer("Bot 1"));
-            server.addPlayer(new BotPlayer("Bot 2"));
-
-            // Build game with ALL connected players
-            List<Player> players = server.getPlayers();
             Game game = new Game(greenDeck, redDeck, players);
             game.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

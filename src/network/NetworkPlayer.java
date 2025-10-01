@@ -2,6 +2,7 @@ package network;
 
 import player.Player;
 import card.Card;
+import ui.NetworkLogger;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,15 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkPlayer implements Player {
-    private String name;
-    private List<Card> hand = new ArrayList<>();
-    //private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    private final String name;
+    private final List<Card> hand = new ArrayList<>();
+    private final BufferedReader in;
+    private final PrintWriter out;
 
     public NetworkPlayer(String name, Socket socket) throws IOException {
         this.name = name;
-        //this.socket = socket;
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
@@ -29,7 +28,7 @@ public class NetworkPlayer implements Player {
 
     @Override
     public List<Card> getHand() {
-        return hand;
+        return new ArrayList<>(hand); // defensive copy
     }
 
     @Override
@@ -39,8 +38,8 @@ public class NetworkPlayer implements Player {
             String response = in.readLine();
             int choice = Integer.parseInt(response);
             return hand.remove(choice);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            NetworkLogger.error("Failed to play card for " + name, e);
             return null;
         }
     }
@@ -57,8 +56,8 @@ public class NetworkPlayer implements Player {
             String response = in.readLine();
             int choice = Integer.parseInt(response);
             return submissions.get(choice);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            NetworkLogger.error("Failed to select winner for " + name, e);
             return null;
         }
     }

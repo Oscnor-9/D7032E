@@ -32,7 +32,6 @@ public class FileCardLoader {
             }
         }
 
-        System.out.println("✅ Loaded " + cards.size() + " cards from " + fileName);
         return cards;
     }
 }

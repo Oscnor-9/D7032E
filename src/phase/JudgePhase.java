@@ -18,7 +18,7 @@ public class JudgePhase implements Phase {
         Player winner = game.getOwnerOf(winningCard);
         game.awardPoint(winner);
 
-        System.out.println("👑 Judge " + judge.getName() +
+        System.out.println("Judge " + judge.getName() +
                            " chose: " + winningCard.getText() +
                            " → Point for " + winner.getName());
         
