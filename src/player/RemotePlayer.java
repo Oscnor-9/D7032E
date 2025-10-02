@@ -4,7 +4,7 @@ import card.Card;
 import ui.InteractiveUI;
 import ui.NetworkInput;
 import ui.NetworkUI;
-
+import ui.ServerLogger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class RemotePlayer implements Player {
             return hand.remove(0);
         }
     }
-/*
+
     @Override
     public Card selectWinner(List<Card> submissions) {
         try {
@@ -49,26 +49,10 @@ public class RemotePlayer implements Player {
             int idx = parseIndex(line, submissions.size());
             return submissions.get(idx);
         } catch (IOException e) {
-            ui.showDisconnect(name);
-            return submissions.get(0); // fallback
-        }
-    }
-*/
-    @Override
-    public Card selectWinner(List<Card> submissions) {
-        try {
-            ui.promptJudgeChoice();
-            ui.showSubmissions(submissions);
+            // ⚠️ Log on server console
+            ServerLogger.warn("Remote player disconnected: " + name);
 
-            String line = input.readLine(); // waits for reply
-            if (line == null) { // client disconnected
-                ui.showDisconnect(name);  // delegate to UI
-                return submissions.get(0); // safe default or handle gracefully
-            }
-            int idx = parseIndex(line, submissions.size());
-            return submissions.get(idx);
-
-        } catch (IOException e) {
+            // ⚠️ Notify other connected clients
             ui.showDisconnect(name);
             return submissions.get(0); // fallback
         }

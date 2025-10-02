@@ -10,6 +10,6 @@ public class ServerLogger {
     }
 
     public static void warn(String msg) {
-        System.out.println("⚠️ " + msg);
+        System.err.println("⚠️ " + msg);
     }
 }
