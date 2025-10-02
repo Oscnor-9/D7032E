@@ -32,6 +32,7 @@ public class GameClient {
                     String choice = console.readLine();
                     while (console.ready()) console.readLine(); // drain spam
                     out.println(choice);
+                    out.flush();
 
                 } else if ("JUDGE_TURN".equals(line)) {
                     ui.showJudgeTurn();
@@ -42,6 +43,7 @@ public class GameClient {
                     String choice = console.readLine();
                     while (console.ready()) console.readLine();
                     out.println(choice);
+                    out.flush();
                     judgeMode = false;
 
                 } else {

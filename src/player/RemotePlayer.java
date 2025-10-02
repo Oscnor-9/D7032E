@@ -39,11 +39,12 @@ public class RemotePlayer implements Player {
         try {
             ui.showSubmissions(submissions);
             ui.promptJudgeChoice();
-            String line = input.readLine();   // may throw IOException
+            String line = input.readLine();   // waits for client
+            System.out.println("DEBUG: got judge input: " + line);
             int idx = parseIndex(line, submissions.size());
             return submissions.get(idx);
         } catch (IOException e) {
-            return submissions.get(0); // fallback
+            throw new RuntimeException("Remote judge disconnected", e);
         }
     }
 

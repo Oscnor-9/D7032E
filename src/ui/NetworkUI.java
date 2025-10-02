@@ -39,6 +39,7 @@ public class NetworkUI implements GameUI {
             out.println(i + ":" + submissions.get(i).getText());
         }
         out.println("END_SUBMISSIONS");
+        out.flush();
     }
 
     // ⚡ Extra protocol messages — not part of GameUI

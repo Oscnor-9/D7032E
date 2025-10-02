@@ -11,9 +11,9 @@ public class JudgePhase implements Phase {
     @Override
     public void execute(Game game) {
         Player judge = game.getCurrentJudge();
-        Card winningCard = judge.selectWinner(
-            new ArrayList<>(game.getSubmittedCards())
-        );
+        System.out.println("▶ Judge " + judge.getName() + " is selecting...");
+        Card winningCard = judge.selectWinner(new ArrayList<>(game.getSubmittedCards()));
+        System.out.println("✅ Judge returned a choice: " + winningCard.getText());
 
         Player winner = game.getOwnerOf(winningCard);
         game.awardPoint(winner);
