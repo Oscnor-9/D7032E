@@ -38,7 +38,7 @@ public class RemotePlayer implements Player {
             return hand.remove(0);
         }
     }
-
+/*
     @Override
     public Card selectWinner(List<Card> submissions) {
         try {
@@ -48,6 +48,26 @@ public class RemotePlayer implements Player {
             String line = input.readLine();    // wait for client reply
             int idx = parseIndex(line, submissions.size());
             return submissions.get(idx);
+        } catch (IOException e) {
+            ui.showDisconnect(name);
+            return submissions.get(0); // fallback
+        }
+    }
+*/
+    @Override
+    public Card selectWinner(List<Card> submissions) {
+        try {
+            ui.promptJudgeChoice();
+            ui.showSubmissions(submissions);
+
+            String line = input.readLine(); // waits for reply
+            if (line == null) { // client disconnected
+                ui.showDisconnect(name);  // delegate to UI
+                return submissions.get(0); // safe default or handle gracefully
+            }
+            int idx = parseIndex(line, submissions.size());
+            return submissions.get(idx);
+
         } catch (IOException e) {
             ui.showDisconnect(name);
             return submissions.get(0); // fallback
