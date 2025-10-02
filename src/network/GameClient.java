@@ -1,6 +1,8 @@
 package network;
 
 import ui.ClientConsoleUI;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.io.*;
 import java.net.Socket;
 
@@ -14,6 +16,15 @@ public class GameClient {
         this.socket = new Socket(host, port);
         this.host = host;
         this.port = port;
+    }
+    private Map<String, Integer> parseScores(String data) {
+        Map<String, Integer> scores = new LinkedHashMap<>();
+        for (String part : data.split(";")) {
+            if (part.isBlank()) continue;
+            String[] kv = part.split("=");
+            scores.put(kv[0], Integer.parseInt(kv[1]));
+        }
+        return scores;
     }
 
     public void start() throws IOException {
@@ -43,7 +54,10 @@ public class GameClient {
                     out.flush();
                     judgeMode = false;
 
-                } else {
+                }else if (line.startsWith("SCORES:")) {
+                    ui.showScores(parseScores(line.substring(7)));
+                }
+                else {
                     ui.showMessage(line);
                 }
             }

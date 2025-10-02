@@ -19,12 +19,16 @@ public class NetworkUI implements GameUI {
     }
 
     @Override
-    public void showScores(List<Player> players, Function<Player, Integer> scoreFn) {
-        out.println("SCORES");
+    public void showScores(List<Player> players, Function<Player, Integer> scoreProvider) {
+        StringBuilder sb = new StringBuilder("SCORES:");
         for (Player p : players) {
-            out.println(p.getName() + ":" + scoreFn.apply(p));
+            sb.append(p.getName())
+              .append("=")
+              .append(scoreProvider.apply(p))
+              .append(";");
         }
-        out.println("END_SCORES");
+        out.println(sb.toString());
+        out.flush();
     }
 
     @Override

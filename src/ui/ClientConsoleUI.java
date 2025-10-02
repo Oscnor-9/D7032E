@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.Scanner;
+import java.util.Map;
 
 public class ClientConsoleUI {
 	    private final Scanner scanner = new Scanner(System.in);
@@ -44,6 +45,12 @@ public class ClientConsoleUI {
 
 	    public void showJudgePrompt() {
 	        System.out.print("Pick winning card index: ");
+	    }
+	    public void showScores(Map<String, Integer> scores) {
+	        System.out.println("📊 Current scores:");
+	        scores.forEach((name, score) -> 
+	            System.out.println("   " + name + " → " + score)
+	        );
 	    }
 	}
 
