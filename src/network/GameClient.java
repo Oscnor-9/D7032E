@@ -56,6 +56,9 @@ public class GameClient {
 
                 }else if (line.startsWith("SCORES:")) {
                     ui.showScores(parseScores(line.substring(7)));
+                }else if (line.startsWith("WINNER:")) {
+                    String winnerName = line.substring(7);
+                    ui.showMessage("🏆 Winner: " + winnerName);
                 }
                 else {
                     ui.showMessage(line);

@@ -16,8 +16,9 @@ public class NetworkUI implements GameUI {
     @Override
     public void showWinner(Player winner) {
         out.println("WINNER:" + winner.getName());
+        out.flush();
     }
-
+    
     @Override
     public void showScores(List<Player> players, Function<Player, Integer> scoreProvider) {
         StringBuilder sb = new StringBuilder("SCORES:");
