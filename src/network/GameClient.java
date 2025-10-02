@@ -46,8 +46,11 @@ public class GameClient {
                     out.flush();
                     judgeMode = false;
 
-                } else {
-                    ui.showMessage(line);
+                } else if (line.startsWith("MESSAGE:")) {
+                    ui.showMessage(line.substring(8));  // strip "MESSAGE:"
+                }
+                else if (line.startsWith("WINNER:")) {
+                    ui.showMessage("🏆 " + line.substring(7));
                 }
             }
         }

@@ -19,6 +19,10 @@ public class HumanPlayer implements Player {
         this.input = input;
     }
 
+    public InteractiveUI getUI() {
+    	return ui;
+    }
+        
     @Override
     public Card playCard() {
         try {
@@ -72,4 +76,5 @@ public class HumanPlayer implements Player {
         if (x >= size) return size - 1;
         return x;
     }
+
 }

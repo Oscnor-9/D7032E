@@ -1,6 +1,7 @@
 package player;
 
 import card.Card;
+import ui.InteractiveUI;
 import ui.NetworkInput;
 import ui.NetworkUI;
 
@@ -20,6 +21,10 @@ public class RemotePlayer implements Player {
         this.input = input;
     }
 
+    public NetworkUI getUI() {
+    	return ui;
+    }
+           
     @Override
     public Card playCard() {
         try {
@@ -37,10 +42,12 @@ public class RemotePlayer implements Player {
     @Override
     public Card selectWinner(List<Card> submissions) {
         try {
-            ui.showSubmissions(submissions);
-            ui.promptJudgeChoice();
-            String line = input.readLine();   // waits for client
-            System.out.println("DEBUG: got judge input: " + line);
+            ui.showSubmissions(submissions);   // SUBMISSIONS... (without END_SUBMISSIONS yet)
+            ui.promptJudgeChoice();            // tell client it's time to judge
+            // Now finish submissions list
+            ui.endSubmissions();               // send END_SUBMISSIONS
+            String line = input.readLine();    // wait for client reply
+            System.out.println("DEBUG: judge input = " + line);
             int idx = parseIndex(line, submissions.size());
             return submissions.get(idx);
         } catch (IOException e) {

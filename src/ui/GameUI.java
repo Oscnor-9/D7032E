@@ -9,4 +9,5 @@ public interface GameUI {
     void showScores(List<Player> players, java.util.function.Function<Player,Integer> scoreFn);
     void announceJudge(Player judge);
     void showSubmissions(List<Card> submissions);
+    void showMessage(String msg);
 }

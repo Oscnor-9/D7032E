@@ -62,4 +62,8 @@ public class ConsoleUI implements InteractiveUI {
                            " → Point for " + winner.getName());
         showScores(players, game::getScore);
     }
+    @Override
+    public void showMessage(String msg) {
+    	System.out.println(msg);
+    }
 }

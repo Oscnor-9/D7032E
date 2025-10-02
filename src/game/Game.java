@@ -69,7 +69,21 @@ public class Game{
 	        nextJudge();        // rotate judge
 	    }
 
-	    System.out.println("Winner: " + getWinner().getName());
+	    Player winner = getWinner();
+
+	 // Announce game over to all players
+	    for (Player p : players) {
+	    	if (p instanceof player.HumanPlayer hp) {
+	    		hp.getUI().showWinner(winner);
+	    		hp.getUI().showScores(players, this::getScore);
+	    		hp.getUI().showMessage("🎮 Game Over – Thanks for playing!");
+	     }
+	    	if (p instanceof player.RemotePlayer rp) {
+	    		rp.getUI().showWinner(winner);
+	    		rp.getUI().showScores(players, this::getScore);
+	    		rp.getUI().showMessage("🎮 Game Over – Thanks for playing!");
+	     }
+	 }
 	}
 	
 	// ------------------------------------------------------------
@@ -84,13 +98,6 @@ public class Game{
     public GreenAppleCard getCurrentGreenCard() { return currentGreenCard; }
     public void setCurrentGreenCard(GreenAppleCard card) { this.currentGreenCard = card; }
     
-    /*
-    public List<Player> getPlayersExcludingJudge() {
-        List<Player> others = new ArrayList<>(players);
-        others.remove(currentJudge);
-        return others;
-    }
-    */
     
     public List<Player> getPlayersExcludingJudge() {
         return players.stream()
