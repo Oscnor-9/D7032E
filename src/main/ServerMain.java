@@ -3,7 +3,7 @@ package main;
 import card.Deck;
 import card.GreenAppleCard;
 import card.RedAppleCard;
-import io.FileCardLoader;
+//import io.FileCardLoader;
 import player.HumanPlayer;
 import player.BotPlayer;
 import player.Player;
@@ -12,6 +12,7 @@ import ui.ConsoleUI;
 import ui.NetworkInput;
 import ui.NetworkUI;
 import game.Game;
+import player.RemotePlayer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -53,7 +54,7 @@ public class ServerMain {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                HumanPlayer remote = new HumanPlayer(
+                RemotePlayer remote = new RemotePlayer(
                         "Remote" + i,
                         new NetworkUI(out),
                         new NetworkInput(in)

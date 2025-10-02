@@ -1,8 +1,8 @@
 package network;
 
 import player.Player;
+import player.RemotePlayer;   // ✅ use RemotePlayer instead of HumanPlayer
 import ui.NetworkInput;
-import player.HumanPlayer;
 import ui.NetworkUI;
 import ui.ServerLogger;
 
@@ -14,7 +14,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import ui.GameUI;
 
 // Holds the listening socket AND accumulates joined players.
 public class GameServer {
@@ -26,8 +25,8 @@ public class GameServer {
         ServerLogger.info("🚀 Listening on port " + port);
     }
 
-    /** Blocks until a client connects; wraps it as a HumanPlayer and stores it. */
-    public HumanPlayer acceptRemotePlayer(String name) throws IOException {
+    /** Blocks until a client connects; wraps it as a RemotePlayer and stores it. */
+    public RemotePlayer acceptRemotePlayer(String name) throws IOException {
         ServerLogger.info("Waiting for client...");
         Socket clientSocket = serverSocket.accept();
         ServerLogger.success("Client connected: " + clientSocket);
@@ -35,14 +34,13 @@ public class GameServer {
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         PrintWriter out   = new PrintWriter(clientSocket.getOutputStream(), true);
 
-        GameUI ui = new NetworkUI(out);       // output only
+        NetworkUI ui = new NetworkUI(out);       // output only
         NetworkInput input = new NetworkInput(in);  // input only
 
-        HumanPlayer hp = new HumanPlayer(name, ui, input);  // now 'name' is valid
-        players.add(hp);
-        return hp;
+        RemotePlayer rp = new RemotePlayer(name, ui, input);
+        players.add(rp);
+        return rp;
     }
-
 
     /** Optionally add local/bot players to the same list. */
     public void addPlayer(Player p) {

@@ -84,17 +84,25 @@ public class Game{
     public GreenAppleCard getCurrentGreenCard() { return currentGreenCard; }
     public void setCurrentGreenCard(GreenAppleCard card) { this.currentGreenCard = card; }
     
-    
+    /*
     public List<Player> getPlayersExcludingJudge() {
         List<Player> others = new ArrayList<>(players);
         others.remove(currentJudge);
         return others;
+    }
+    */
+    
+    public List<Player> getPlayersExcludingJudge() {
+        return players.stream()
+                      .filter(p -> !p.equals(currentJudge))
+                      .toList();
     }
     
     public void nextJudge() {
         int index = players.indexOf(currentJudge);
         currentJudge = players.get((index + 1) % players.size());
     }
+    
     
     // ------------------------------------------------------------
     // Submissions

@@ -2,7 +2,6 @@ package ui;
 
 import card.Card;
 import player.Player;
-
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.function.Function;
@@ -42,22 +41,20 @@ public class NetworkUI implements GameUI {
         out.println("END_SUBMISSIONS");
     }
 
-    @Override
+    // ⚡ Extra protocol messages — not part of GameUI
+    public void promptPlayCard() {
+        out.println("YOUR_TURN");
+    }
+
+    public void promptJudgeChoice() {
+        out.println("JUDGE_TURN");
+    }
+
     public void showHand(List<Card> hand) {
         out.println("HAND");
         for (int i = 0; i < hand.size(); i++) {
             out.println(i + ":" + hand.get(i).getText());
         }
         out.println("END_HAND");
-    }
-
-    @Override
-    public void promptPlayCard() {
-        out.println("YOUR_TURN");
-    }
-
-    @Override
-    public void promptJudgeChoice() {
-        out.println("JUDGE_TURN");
     }
 }
