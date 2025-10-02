@@ -15,7 +15,7 @@ public class GameClient {
         this.host = host;
         this.port = port;
     }
-
+/*
     public void start() throws IOException {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -53,6 +53,40 @@ public class GameClient {
                     ui.showMessage(line);
                 }
             }
+        }*/
+    public void start() throws IOException {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+            ui.showConnected(host, port);
+
+            String line;
+            boolean judgeMode = false;
+
+            while ((line = in.readLine()) != null) {
+                if ("YOUR_TURN".equals(line)) {
+                    ui.showPlayerTurn();
+                    String choice = ui.readUserInput();   // ✅ from UI
+                    out.println(choice);
+                    out.flush();
+
+                } else if ("JUDGE_TURN".equals(line)) {
+                    ui.showJudgeTurn();
+                    judgeMode = true;
+
+                } else if (judgeMode && "END_SUBMISSIONS".equals(line)) {
+                    ui.showJudgePrompt();
+                    String choice = ui.readUserInput();   // ✅ from UI
+                    out.println(choice);
+                    out.flush();
+                    judgeMode = false;
+
+                } else {
+                    ui.showMessage(line);
+                }
+            }
         }
     }
-}
+
+    }
+

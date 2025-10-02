@@ -24,42 +24,9 @@ public class RemotePlayer implements Player {
     public NetworkUI getUI() {
     	return ui;
     }
- /*          
-    @Override
-    public Card playCard() {
-        try {
-            ui.showHand(hand);
-            ui.promptPlayCard();
-            String line = input.readLine();   // may throw IOException
-            int idx = parseIndex(line, hand.size());
-            return hand.remove(idx);
-        } catch (IOException e) {
-            // fallback if network fails
-            return hand.remove(0);
-        }
-    }
 
     @Override
-    public Card selectWinner(List<Card> submissions) {
-        try {
-            ui.showSubmissions(submissions);   // SUBMISSIONS... (without END_SUBMISSIONS yet)
-            ui.promptJudgeChoice();            // tell client it's time to judge  
-            ui.endSubmissions();               // send END_SUBMISSIONS
-            String line = input.readLine();    // wait for client reply
-            int idx = parseIndex(line, submissions.size());
-            return submissions.get(idx);
-        } catch (IOException e) {
-            // ⚠️ Log on server console
-
-
-            // ⚠️ Notify other connected clients
-            ui.showDisconnect(name);
-            return submissions.get(0); // fallback
-        }
-    }
- */
-    @Override
-    public Card playCard() {
+    public Card playCard() {				//Handles the playPhase for the remote connected player
         ui.showHand(hand);
         ui.promptPlayCard();
 
@@ -73,7 +40,7 @@ public class RemotePlayer implements Player {
         return hand.remove(idx);
     }
     @Override
-    public Card selectWinner(List<Card> submissions) {
+    public Card selectWinner(List<Card> submissions) {	//Handles the JudgePhase for the remote connected Player
         ui.showSubmissions(submissions);
         ui.promptJudgeChoice();
         ui.endSubmissions();
@@ -83,11 +50,11 @@ public class RemotePlayer implements Player {
             // fallback if disconnected
             return submissions.isEmpty() ? null : submissions.get(0);
         }
-
         int idx = parseIndex(line, submissions.size());
         return submissions.get(idx);
     }
-    private String safeReadLine(String context) {
+    
+    private String safeReadLine(String context) {	//Helper function that read the input from remote player and catches if they disconnect
         try {
             String line = input.readLine();
             if (line == null) {
@@ -104,12 +71,12 @@ public class RemotePlayer implements Player {
     }
 
     @Override
-    public void receiveCard(Card c) {
+    public void receiveCard(Card c) {	
         hand.add(c);
     }
 
     @Override
-    public String getName() {
+    public String getName() {	
         return name;
     }
 

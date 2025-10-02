@@ -1,25 +1,18 @@
 package main;
 
 import network.GameClient;
+import ui.ClientConsoleUI;
 
-import java.util.Scanner;
+
+//Main class that starts when a remote Player wants to join a server
 
 public class ClientMain {
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+        ClientConsoleUI ui = new ClientConsoleUI();
 
-        // Ask user for server address
-        System.out.print("Enter server IP (default = localhost): ");
-        String host = scanner.nextLine().trim();
-        if (host.isEmpty()) {
-            host = "localhost";
-        }
+        String host = ui.askServerIp();
+        int port = ui.askServerPort();
 
-        // Ask user for server port
-        System.out.print("Enter server port: ");
-        int port = scanner.nextInt();
-
-        // Start client
         GameClient client = new GameClient(host, port);
         client.start();
     }

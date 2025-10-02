@@ -13,6 +13,8 @@ import game.Game;
 import java.util.ArrayList;
 import java.util.List;
 
+//Main for a player that wants to play a local game against bots
+
 public class LocalMain {
     public static void start(Deck<GreenAppleCard> greenDeck, Deck<RedAppleCard> redDeck, int numOfBots) {
         List<Player> players = new ArrayList<>();
