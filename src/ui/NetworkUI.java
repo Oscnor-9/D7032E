@@ -38,9 +38,14 @@ public class NetworkUI implements GameUI {
         for (int i = 0; i < submissions.size(); i++) {
             out.println(i + ":" + submissions.get(i).getText());
         }
+        // do not close here
+    }
+
+    public void endSubmissions() {
         out.println("END_SUBMISSIONS");
         out.flush();
     }
+
 
     // ⚡ Extra protocol messages — not part of GameUI
     public void promptPlayCard() {
