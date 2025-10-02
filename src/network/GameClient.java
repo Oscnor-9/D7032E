@@ -46,10 +46,11 @@ public class GameClient {
                     out.flush();
                     judgeMode = false;
 
-                } 
+                } else if (line.startsWith("DISCONNECT:")) {
+                    ui.showMessage("⚠️ " + line.substring(11) + " disconnected.");
+                }
                 else {
                     ui.showMessage(line);
-                    System.out.println("hurrdurr");
                 }
             }
         }

@@ -43,15 +43,14 @@ public class RemotePlayer implements Player {
     public Card selectWinner(List<Card> submissions) {
         try {
             ui.showSubmissions(submissions);   // SUBMISSIONS... (without END_SUBMISSIONS yet)
-            ui.promptJudgeChoice();            // tell client it's time to judge
-            // Now finish submissions list
+            ui.promptJudgeChoice();            // tell client it's time to judge  
             ui.endSubmissions();               // send END_SUBMISSIONS
             String line = input.readLine();    // wait for client reply
-            System.out.println("DEBUG: judge input = " + line);
             int idx = parseIndex(line, submissions.size());
             return submissions.get(idx);
         } catch (IOException e) {
-            throw new RuntimeException("Remote judge disconnected", e);
+            ui.showDisconnect(name);
+            return submissions.get(0); // fallback
         }
     }
 

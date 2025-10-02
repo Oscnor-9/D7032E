@@ -66,4 +66,8 @@ public class ConsoleUI implements InteractiveUI {
     public void showMessage(String msg) {
     	System.out.println(msg);
     }
+    @Override
+    public void showDisconnect(String playerName) {
+        System.out.println("⚠️ Player disconnected: " + playerName);
+    }
 }
