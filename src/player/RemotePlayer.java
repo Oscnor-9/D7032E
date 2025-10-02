@@ -24,7 +24,7 @@ public class RemotePlayer implements Player {
     public NetworkUI getUI() {
     	return ui;
     }
-           
+ /*          
     @Override
     public Card playCard() {
         try {
@@ -50,11 +50,56 @@ public class RemotePlayer implements Player {
             return submissions.get(idx);
         } catch (IOException e) {
             // ⚠️ Log on server console
-            ServerLogger.warn("Remote player disconnected: " + name);
+
 
             // ⚠️ Notify other connected clients
             ui.showDisconnect(name);
             return submissions.get(0); // fallback
+        }
+    }
+ */
+    @Override
+    public Card playCard() {
+        ui.showHand(hand);
+        ui.promptPlayCard();
+
+        String line = safeReadLine("playCard");
+        if (line == null) {
+            // fallback if disconnected
+            return hand.isEmpty() ? null : hand.remove(0);
+        }
+
+        int idx = parseIndex(line, hand.size());
+        return hand.remove(idx);
+    }
+    @Override
+    public Card selectWinner(List<Card> submissions) {
+        ui.showSubmissions(submissions);
+        ui.promptJudgeChoice();
+        ui.endSubmissions();
+
+        String line = safeReadLine("selectWinner");
+        if (line == null) {
+            // fallback if disconnected
+            return submissions.isEmpty() ? null : submissions.get(0);
+        }
+
+        int idx = parseIndex(line, submissions.size());
+        return submissions.get(idx);
+    }
+    private String safeReadLine(String context) {
+        try {
+            String line = input.readLine();
+            if (line == null) {
+                ServerLogger.warn("Remote player disconnected (" + context + "): " + name);
+                ui.showDisconnect(name);
+                return null;
+            }
+            return line;
+        } catch (IOException e) {
+            ServerLogger.warn("Remote player disconnected (" + context + ", IOException): " + name);
+            ui.showDisconnect(name);
+            return null;
         }
     }
 
