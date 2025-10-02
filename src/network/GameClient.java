@@ -37,7 +37,7 @@ public class GameClient {
                     ui.showJudgeTurn();
                     judgeMode = true;
 
-                } else if (judgeMode && "END_CHOICES".equals(line)) {
+                } else if (judgeMode && "END_SUBMISSIONS".equals(line)) {
                     ui.showJudgePrompt();
                     String choice = console.readLine();
                     while (console.ready()) console.readLine();
