@@ -62,6 +62,7 @@ public class NetworkUI implements GameUI {
             out.println(i + ":" + hand.get(i).getText());
         }
         out.println("END_HAND");
+        out.flush();
     }
     @Override
     public void showMessage(String msg) {
