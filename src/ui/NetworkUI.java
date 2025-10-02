@@ -73,4 +73,9 @@ public class NetworkUI implements GameUI {
     public void showDisconnect(String playerName) {
         System.out.println("⚠️ Player disconnected: " + playerName);
     }
+    @Override
+    public void showGreenCard(String text) {
+        out.println("GREEN:" + text);
+        out.flush();
+    }
 }

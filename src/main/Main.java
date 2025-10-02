@@ -4,8 +4,7 @@ import card.Deck;
 import card.GreenAppleCard;
 import card.RedAppleCard;
 import io.FileCardLoader;
-
-import java.util.Scanner;
+import ui.MainConsoleUI;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -17,23 +16,25 @@ public class Main {
             FileCardLoader.loadCards("redApples.txt", RedAppleCard::new)
         );
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose mode: (1) Local, (2) Server, (3) Client");
-        int choice = scanner.nextInt();
-        
-        int numOfBots = 0; // default, ignored for client
+        MainConsoleUI ui = new MainConsoleUI();
 
-        // Ask for bots only if Local or Server
+        int choice = ui.askMode();
+        int numOfBots = 0;
+
         if (choice == 1 || choice == 2) {
-            System.out.print("How many bots should be in the game? ");
-            numOfBots = scanner.nextInt();
+            do {
+                numOfBots = ui.askNumOfBots();
+                if (numOfBots < 2) {
+                    ui.showInvalidBotCount();
+                }
+            } while (numOfBots < 2);
         }
 
         switch (choice) {
             case 1 -> LocalMain.start(greenDeck, redDeck, numOfBots);
             case 2 -> ServerMain.start(greenDeck, redDeck, numOfBots);
-            case 3 -> ClientMain.main(new String[]{}); // client doesn’t need bots
-            default -> System.out.println("Invalid choice");
+            case 3 -> ClientMain.main(new String[]{});
+            default -> ui.showInvalidChoice();
         }
     }
 }

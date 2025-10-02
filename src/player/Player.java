@@ -1,6 +1,7 @@
 package player;
 
 import java.util.List;
+import ui.GameUI;
 import card.Card;
 
 public interface Player {
@@ -11,4 +12,6 @@ public interface Player {
 	void receiveCard(Card card);
 	
 	Card selectWinner(List<Card> submissions);
+	
+	GameUI getUI();
 }

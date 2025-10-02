@@ -70,4 +70,8 @@ public class ConsoleUI implements InteractiveUI {
     public void showDisconnect(String playerName) {
         System.out.println("⚠️ Player disconnected: " + playerName);
     }
+    @Override
+    public void showGreenCard(String text) {
+        System.out.println("\n Green card: " + text);
+    }
 }

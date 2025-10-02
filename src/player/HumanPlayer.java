@@ -76,5 +76,6 @@ public class HumanPlayer implements Player {
         if (x >= size) return size - 1;
         return x;
     }
+    
 
 }

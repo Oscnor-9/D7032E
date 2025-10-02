@@ -11,4 +11,5 @@ public interface GameUI {
     void showSubmissions(List<Card> submissions);
     void showMessage(String msg);
     void showDisconnect(String playerName);
+    void showGreenCard(String text);
 }

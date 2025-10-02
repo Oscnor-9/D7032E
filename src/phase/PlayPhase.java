@@ -8,16 +8,20 @@ import card.Card;
 public class PlayPhase implements Phase {
     @Override
     public void execute(Game game) {
-        System.out.println("▶ Players are choosing red cards...");
+        // ✅ Announce start of play phase
+        game.broadcast(ui -> ui.showMessage("▶ Players are choosing red cards..."));
 
         for (Player p : game.getPlayersExcludingJudge()) {
             Card chosen = p.playCard();   // works for both bots and humans
 
-            if (chosen instanceof RedAppleCard) {
-                game.submitRedCard(p, (RedAppleCard) chosen);
-                System.out.println("  " + p.getName() + " submitted a card.");
+            if (chosen instanceof RedAppleCard redCard) {
+                game.submitRedCard(p, redCard);
+
+                // ✅ Tell everyone a card was submitted
+                game.broadcast(ui -> ui.showMessage("  " + p.getName() + " submitted a card."));
             } else {
-                System.out.println("  " + p.getName() + " could not play a red card.");
+                // ✅ Tell everyone this player failed to play
+                game.broadcast(ui -> ui.showMessage("  " + p.getName() + " could not play a red card."));
             }
         }
     }

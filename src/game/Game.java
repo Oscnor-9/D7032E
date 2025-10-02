@@ -1,6 +1,7 @@
 package game;
 
 import card.*;
+import ui.GameUI;
 import player.Player;
 import phase.ReplenishPhase;
 
@@ -109,6 +110,17 @@ public class Game{
         int index = players.indexOf(currentJudge);
         currentJudge = players.get((index + 1) % players.size());
     }
+    
+	 // ------------------------------------------------------------
+	 // UI helpers
+	 // ------------------------------------------------------------
+	 public void broadcast(java.util.function.Consumer<ui.GameUI> action) {
+	     for (Player p : players) {
+	         if (p.getUI() != null) {
+	             action.accept(p.getUI());
+	         }
+	     }
+	 }
     
     
     // ------------------------------------------------------------

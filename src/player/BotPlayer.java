@@ -1,6 +1,7 @@
 package player;
 
 import java.util.ArrayList;
+import ui.GameUI;
 import java.util.List;
 import java.util.Random;
 import card.Card;
@@ -33,5 +34,9 @@ public class BotPlayer implements Player{
 			return null;
 		}
 		return submissions.get(random.nextInt(submissions.size()));
+	}
+	@Override
+	public GameUI getUI() {
+	    return null; // bots don’t need a UI
 	}
 }

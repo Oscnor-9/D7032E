@@ -3,7 +3,6 @@ package main;
 import card.Deck;
 import card.GreenAppleCard;
 import card.RedAppleCard;
-//import io.FileCardLoader;
 import player.HumanPlayer;
 import player.BotPlayer;
 import player.Player;
@@ -11,6 +10,7 @@ import ui.ConsoleInput;
 import ui.ConsoleUI;
 import ui.NetworkInput;
 import ui.NetworkUI;
+import ui.ServerConsoleUI;
 import game.Game;
 import player.RemotePlayer;
 
@@ -21,16 +21,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ServerMain {
 
     public static void start(Deck<GreenAppleCard> greenDeck, Deck<RedAppleCard> redDeck, int numOfBots) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+        ServerConsoleUI ui = new ServerConsoleUI();
 
-        // Ask how many remote players
-        System.out.print("How many remote players should join? ");
-        int numRemote = scanner.nextInt();
+        int numRemote = ui.askNumRemotePlayers();
 
         List<Player> players = new ArrayList<>();
 
@@ -44,12 +41,12 @@ public class ServerMain {
 
         try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 = ask OS for free port
             int port = serverSocket.getLocalPort();
-            System.out.println("✅ Server running on port " + port + ", waiting for " + numRemote + " players...");
+            ui.showServerRunning(port, numRemote);
 
             // Wait until all remote players have connected
             for (int i = 1; i <= numRemote; i++) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("🔌 Remote player connected (" + i + "/" + numRemote + ")");
+                ui.showRemoteConnected(i, numRemote);
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
