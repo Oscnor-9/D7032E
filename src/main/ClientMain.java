@@ -4,9 +4,16 @@ import network.GameClient;
 import ui.ClientConsoleUI;
 
 
-//Main class that starts when a remote Player wants to join a server
+/**
+ * Entry point for a remote client that wants to connect to an existing server
+ */
 
 public class ClientMain {
+	/**
+	 * Asks the user for server IP and port, the connects and start the client loop
+	 * @param args unused
+	 * @throws Exception if the client cannot connect or run
+	 */
     public static void main(String[] args) throws Exception {
         ClientConsoleUI ui = new ClientConsoleUI();
 

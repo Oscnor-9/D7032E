@@ -19,6 +19,6 @@ public class MainConsoleUI {
         System.out.println("Invalid choice");
     }
     public void showInvalidBotCount() {
-        System.out.println("❌ You must add at least 2 bots for a valid game.");
+        System.out.println("You must add at least 2 bots for a valid game.");
     }
 }

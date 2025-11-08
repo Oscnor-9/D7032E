@@ -22,8 +22,22 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Starts a game server that hosts a local human player, bots, 
+ * and a configurable number of remote players connected over TCP.
+ */
+
 public class ServerMain {
 
+	/**
+	 * Opens a server socket, waits for the requested number of remote players, 
+	 * then starts a game session with all connected players
+	 * @param greenDeck the deck of green apple cards
+	 * @param redDeck the deck of red apple cards
+	 * @param numOfBots number of bots
+	 * @throws Exception if the server cannot be started
+	 */
     public static void start(Deck<GreenAppleCard> greenDeck, Deck<RedAppleCard> redDeck, int numOfBots) throws Exception {
         ServerConsoleUI ui = new ServerConsoleUI();
 
@@ -38,8 +52,9 @@ public class ServerMain {
         for (int i = 1; i <= numOfBots; i++) {
             players.add(new BotPlayer("Bot" + i));
         }
-
-        try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 = ask OS for free port
+        
+        // 0 = ask OS for free port
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
             int port = serverSocket.getLocalPort();
             ui.showServerRunning(port, numRemote);
 

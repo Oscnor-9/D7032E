@@ -12,12 +12,12 @@ public class ConsoleUI implements InteractiveUI {
 
     @Override
     public void showWinner(Player winner) {
-        System.out.println("🎉 Winner: " + winner.getName());
+        System.out.println("Winner: " + winner.getName());
     }
 
     @Override
     public void showScores(List<Player> players, Function<Player, Integer> scoreFn) {
-        System.out.println("📊 Current scores:");
+        System.out.println("Current scores:");
         for (Player p : players) {
             System.out.println("   " + p.getName() + " → " + scoreFn.apply(p));
         }
@@ -26,7 +26,7 @@ public class ConsoleUI implements InteractiveUI {
 
     @Override
     public void announceJudge(Player judge) {
-        System.out.println("👩‍⚖️ Judge this round: " + judge.getName());
+        System.out.println("Judge this round: " + judge.getName());
     }
 
     @Override
@@ -39,12 +39,12 @@ public class ConsoleUI implements InteractiveUI {
 
     @Override
     public void promptPlayCard() {
-        System.out.println("▶ Choose a card from your hand:");
+        System.out.println("Choose a card from your hand:");
     }
 
     @Override
     public void promptJudgeChoice() {
-        System.out.println("▶ Judge, choose the winning card:");
+        System.out.println("Judge, choose the winning card:");
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ConsoleUI implements InteractiveUI {
     }
     @Override
     public void showDisconnect(String playerName) {
-        System.out.println("⚠️ Player disconnected: " + playerName);
+        System.out.println("Player disconnected: " + playerName);
     }
     @Override
     public void showGreenCard(String text) {
