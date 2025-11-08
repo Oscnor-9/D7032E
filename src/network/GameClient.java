@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.io.*;
 import java.net.Socket;
+import network.Protocol.*;
 
 public class GameClient {
     private final Socket socket;
@@ -37,28 +38,28 @@ public class GameClient {
             boolean judgeMode = false;
 
             while ((line = in.readLine()) != null) {
-                if ("YOUR_TURN".equals(line)) {
+                if (Protocol.YOUR_TURN.equals(line)) {
                     ui.showPlayerTurn();
                     String choice = ui.readUserInput();   // ✅ from UI
                     out.println(choice);
                     out.flush();
 
-                } else if ("JUDGE_TURN".equals(line)) {
+                } else if (Protocol.JUDGE_TURN.equals(line)) {
                     ui.showJudgeTurn();
                     judgeMode = true;
 
-                } else if (judgeMode && "END_SUBMISSIONS".equals(line)) {
+                } else if (judgeMode && Protocol.END_SUBMISSIONS.equals(line)) {
                     ui.showJudgePrompt();
                     String choice = ui.readUserInput();   // ✅ from UI
                     out.println(choice);
                     out.flush();
                     judgeMode = false;
 
-                }else if (line.startsWith("SCORES:")) {
-                    ui.showScores(parseScores(line.substring(7)));
-                }else if (line.startsWith("WINNER:")) {
-                    String winnerName = line.substring(7);
-                    ui.showMessage("🏆 Winner: " + winnerName);
+                }else if (line.startsWith(Protocol.SCORES_PREFIX)) {
+                    ui.showScores(parseScores(line.substring(Protocol.SCORES_PREFIX.length())));
+                }else if (line.startsWith(Protocol.WINNER_PREFIX)) {
+                    String winnerName = line.substring(Protocol.WINNER_PREFIX.length());
+                    ui.showMessage("Winner: " + winnerName);
                 }
                 else {
                     ui.showMessage(line);

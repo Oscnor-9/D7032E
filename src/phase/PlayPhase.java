@@ -1,8 +1,13 @@
 package phase;
 
 import game.Game;
+import java.util.List;
+import java.util.ArrayList;
 import player.Player;
 import card.RedAppleCard;
+
+import java.util.Collections;
+
 import card.Card;
 
 public class PlayPhase implements Phase {
@@ -10,8 +15,12 @@ public class PlayPhase implements Phase {
     public void execute(Game game) {
         // ✅ Announce start of play phase
         game.broadcast(ui -> ui.showMessage("▶ Players are choosing red cards..."));
+        
+        List<Player> order = new ArrayList<>(game.getPlayersExcludingJudge());
+        Collections.shuffle(order);
+        
 
-        for (Player p : game.getPlayersExcludingJudge()) {
+        for (Player p : order) {
             Card chosen = p.playCard();   // works for both bots and humans
 
             if (chosen instanceof RedAppleCard redCard) {

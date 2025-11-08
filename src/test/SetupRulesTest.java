@@ -26,26 +26,40 @@ public class SetupRulesTest {
 
     @Test
     public void rule3_shuffleDecks() throws Exception {
-        Deck<RedAppleCard> reds1 = loadRedDeck();
-        Deck<RedAppleCard> reds2 = loadRedDeck();
-        // After shuffle, order should not always be identical
-        boolean allSame = true;
-        for (int i = 0; i < reds1.size(); i++) {
-            if (!reds1.get(i).getText().equals(reds2.get(i).getText())) {
-                allSame = false; break;
+        Deck<RedAppleCard> original = loadRedDeck();
+        boolean foundDifference = false;
+
+        // Try multiple times to reduce false negatives
+        for (int run = 0; run < 3; run++) {
+            Deck<RedAppleCard> shuffled = loadRedDeck();
+            shuffled.shuffle(); // explicitly shuffle
+
+            // Compare order with original
+            boolean allSame = true;
+            for (int i = 0; i < original.size(); i++) {
+                if (!original.get(i).getText().equals(shuffled.get(i).getText())) {
+                    allSame = false;
+                    break;
+                }
+            }
+            if (!allSame) {
+                foundDifference = true;
+                break;
             }
         }
-        assertFalse("Decks should not always be in the same order after shuffle", allSame);
+        assertTrue("Shuffling should change the card order at least once", foundDifference);
     }
 
     @Test
     public void rule4_dealSevenRedApples() throws Exception {
         Deck<GreenAppleCard> greens = loadGreenDeck();
         Deck<RedAppleCard> reds = loadRedDeck();
+        int initialRedSize = reds.size();
 
-        List<Player> players = new ArrayList<>();
-        players.add(new BotPlayer("Bot 1"));
-        players.add(new BotPlayer("Bot 2"));
+        List<Player> players = Arrays.asList(
+                new BotPlayer("Bot 1"),
+                new BotPlayer("Bot 2")
+        );
 
         Game game = new Game(greens, reds, players);
         new ReplenishPhase().execute(game);
@@ -53,6 +67,10 @@ public class SetupRulesTest {
         for (Player p : game.getPlayers()) {
             assertEquals("Each player should start with 7 cards", 7, p.getHand().size());
         }
+
+        // Extra: verify deck reduced by 14 cards
+        assertEquals("Red deck should shrink by number of dealt cards",
+                     initialRedSize - (players.size() * 7), reds.size());
     }
 
     @Test
@@ -60,12 +78,21 @@ public class SetupRulesTest {
         Deck<GreenAppleCard> greens = loadGreenDeck();
         Deck<RedAppleCard> reds = loadRedDeck();
 
-        List<Player> players = new ArrayList<>();
-        players.add(new BotPlayer("Bot 1"));
-        players.add(new BotPlayer("Bot 2"));
-        players.add(new BotPlayer("Bot 3"));
+        List<Player> players = Arrays.asList(
+                new BotPlayer("Bot 1"),
+                new BotPlayer("Bot 2"),
+                new BotPlayer("Bot 3")
+        );
 
-        Game game = new Game(greens, reds, players);
-        assertNotNull("There should be a starting judge", game.getCurrentJudge());
+        Set<String> judges = new HashSet<>();
+
+        // Run multiple games to check variation
+        for (int i = 0; i < 10; i++) {
+            Game game = new Game(loadGreenDeck(), loadRedDeck(), players);
+            assertNotNull("There should be a starting judge", game.getCurrentJudge());
+            judges.add(game.getCurrentJudge().getName());
+        }
+
+        assertTrue("Judge selection should vary between games", judges.size() > 1);
     }
 }

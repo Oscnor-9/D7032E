@@ -5,6 +5,7 @@ import player.Player;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.function.Function;
+import network.Protocol;
 
 public class NetworkUI implements GameUI {
     private final PrintWriter out;
@@ -15,13 +16,13 @@ public class NetworkUI implements GameUI {
 
     @Override
     public void showWinner(Player winner) {
-        out.println("WINNER:" + winner.getName());
+        out.println(Protocol.WINNER_PREFIX + winner.getName());
         out.flush();
     }
     
     @Override
     public void showScores(List<Player> players, Function<Player, Integer> scoreProvider) {
-        StringBuilder sb = new StringBuilder("SCORES:");
+        StringBuilder sb = new StringBuilder(Protocol.SCORES_PREFIX);
         for (Player p : players) {
             sb.append(p.getName())
               .append("=")
@@ -34,12 +35,12 @@ public class NetworkUI implements GameUI {
 
     @Override
     public void announceJudge(Player judge) {
-        out.println("JUDGE:" + judge.getName());
+        out.println(Protocol.JUDGE_PREFIX + judge.getName());
     }
 
     @Override
     public void showSubmissions(List<Card> submissions) {
-        out.println("SUBMISSIONS");
+        out.println(Protocol.SUBMISSIONS);
         for (int i = 0; i < submissions.size(); i++) {
             out.println(i + ":" + submissions.get(i).getText());
         }
@@ -47,40 +48,40 @@ public class NetworkUI implements GameUI {
     }
 
     public void endSubmissions() {
-        out.println("END_SUBMISSIONS");
+        out.println(Protocol.END_SUBMISSIONS);
         out.flush();
     }
 
 
     // ⚡ Extra protocol messages — not part of GameUI
     public void promptPlayCard() {
-        out.println("YOUR_TURN");
+        out.println(Protocol.YOUR_TURN);
     }
 
     public void promptJudgeChoice() {
-        out.println("JUDGE_TURN");
+        out.println(Protocol.JUDGE_TURN);
     }
 
     public void showHand(List<Card> hand) {
-        out.println("HAND");
+        out.println(Protocol.HAND);
         for (int i = 0; i < hand.size(); i++) {
             out.println(i + ":" + hand.get(i).getText());
         }
-        out.println("END_HAND");
+        out.println(Protocol.END_HAND);
         out.flush();
     }
     @Override
     public void showMessage(String msg) {
-    	out.println("Message:" + msg);
+    	out.println(Protocol.MESSAGE_PREFIX + msg);
     	out.flush();
     }
     @Override
     public void showDisconnect(String playerName) {
-        System.out.println("⚠️ Player disconnected: " + playerName);
+        System.out.println("Player disconnected: " + playerName);
     }
     @Override
     public void showGreenCard(String text) {
-        out.println("GREEN:" + text);
+        out.println(Protocol.GREEN_PREFIX + text);
         out.flush();
     }
 }

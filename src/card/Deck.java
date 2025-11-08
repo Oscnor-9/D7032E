@@ -18,12 +18,11 @@ public class Deck<T extends Card> {
         Collections.shuffle(cards);
     }
 
-    // 👇 THIS is the important part
     public T draw() {
         if (cards.isEmpty()) {
             return null; // or throw an exception
         }
-        return cards.remove(0);  // ✅ returns ONE card, not the deck
+        return cards.remove(0); 
     }
 
     public void addCard(T card) {

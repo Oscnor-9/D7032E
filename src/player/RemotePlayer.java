@@ -4,6 +4,7 @@ import card.Card;
 import ui.InteractiveUI;
 import ui.NetworkInput;
 import ui.NetworkUI;
+import ui.InputParser;
 import ui.ServerLogger;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class RemotePlayer implements Player {
             return hand.isEmpty() ? null : hand.remove(0);
         }
 
-        int idx = parseIndex(line, hand.size());
+        int idx = InputParser.parseIndex(line, hand.size());
         return hand.remove(idx);
     }
     @Override
@@ -50,7 +51,7 @@ public class RemotePlayer implements Player {
             // fallback if disconnected
             return submissions.isEmpty() ? null : submissions.get(0);
         }
-        int idx = parseIndex(line, submissions.size());
+        int idx = InputParser.parseIndex(line, submissions.size());
         return submissions.get(idx);
     }
     
@@ -85,15 +86,5 @@ public class RemotePlayer implements Player {
         return hand;
     }
 
-    // -- helpers --
-    private int parseIndex(String s, int size) {
-        try {
-            int x = Integer.parseInt(s.trim());
-            if (x < 0) return 0;
-            if (x >= size) return size - 1;
-            return x;
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
+
 }

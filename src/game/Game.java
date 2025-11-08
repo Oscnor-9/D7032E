@@ -14,26 +14,20 @@ public class Game{
 	private Player currentJudge;
 	private GreenAppleCard currentGreenCard;
 	
-	private Map<Player, List<GreenAppleCard>> scores = new HashMap<>(); //Track Points
-	
-	private Map<Player, RedAppleCard> submissions = new HashMap<>(); //Track current round submissions
-	
-	private int winningScore;
-	
+	private final ScoreKeeper scoreKeeper;
+	private final SubmissionsManager submissionsManager;
 	
 	public Game(Deck<GreenAppleCard> greenDeck, Deck<RedAppleCard> redDeck, List<Player> players) {
 		this.greenDeck = greenDeck;
 		this.redDeck = redDeck;
 		this.players = new ArrayList<>(players);
 		
-		for(Player p : players) {					//Initialize score map
-			scores.put(p,  new ArrayList<>()); 
-		}
 		
 		Random rand = new Random();
 		currentJudge = players.get(rand.nextInt(players.size()));  //Randomize judge at start
 		
 		int playerCount = players.size();				//Sets winning score based on number of players
+		int winningScore;
 		if (playerCount >= 4 && playerCount <= 7) {
 		    winningScore = 12 - playerCount;
 		} 
@@ -43,6 +37,9 @@ public class Game{
 		else {
 		    winningScore = 8; // default fallback
 		}
+		
+		this.scoreKeeper = new ScoreKeeper(this.players, winningScore);
+		this.submissionsManager = new SubmissionsManager();
 		
 	}
 	
@@ -77,12 +74,12 @@ public class Game{
 	    	if (p instanceof player.HumanPlayer hp) {
 	    		hp.getUI().showWinner(winner);
 	    		hp.getUI().showScores(players, this::getScore);
-	    		hp.getUI().showMessage("🎮 Game Over – Thanks for playing!");
+	    		hp.getUI().showMessage("Game Over – Thanks for playing!");
 	     }
 	    	if (p instanceof player.RemotePlayer rp) {
 	    		rp.getUI().showWinner(winner);
 	    		rp.getUI().showScores(players, this::getScore);
-	    		rp.getUI().showMessage("🎮 Game Over – Thanks for playing!");
+	    		rp.getUI().showMessage("Game Over – Thanks for playing!");
 	     }
 	 }
 	}
@@ -128,24 +125,20 @@ public class Game{
     // ------------------------------------------------------------
 
     public void submitRedCard(Player player, RedAppleCard card) {
-        submissions.put(player, card);
+        submissionsManager.submitRedCard(player, card);
     }  
     
     public Collection<RedAppleCard> getSubmittedCards() {
-        return submissions.values();
+        return submissionsManager.getSubmittedCards();
     }
 
     public Player getOwnerOf(Card card) {
-        return submissions.entrySet().stream()
-                .filter(e -> e.getValue().equals(card))
-                .map(Map.Entry::getKey)
-                .findFirst()
-                .orElse(null);
+    	return submissionsManager.getOwnerOf(card);
     }
     
 
     public void clearSubmissions() {
-        submissions.clear();
+    	submissionsManager.clear();
     }
 
     // ------------------------------------------------------------
@@ -153,29 +146,22 @@ public class Game{
     // ------------------------------------------------------------
     
     public void awardPoint(Player player) {
-        if (currentGreenCard != null) {
-            scores.get(player).add(currentGreenCard);
-        }
+    	scoreKeeper.awardPoint(player, currentGreenCard);
     }
 
     public int getScore(Player player) {
-        return scores.get(player).size();
+        return scoreKeeper.getScore(player);
     }
 
     public boolean hasWinner() {
-        return players.stream().anyMatch(p -> getScore(p) >= winningScore);
+        return scoreKeeper.hasWinner();
     }
 
     public Player getWinner() {
-        return players.stream()
-                .filter(p -> getScore(p) >= winningScore)
-                .findFirst()
-                .orElse(null);
+        return scoreKeeper.getWinner();
     } 
     public int totalPoints() {
-        return scores.values().stream()
-                .mapToInt(List::size)
-                .sum();
+        return scoreKeeper.totalPoint();
     }  
 }
 

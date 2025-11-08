@@ -3,7 +3,7 @@ package player;
 import card.Card;
 import ui.ChoiceInput;
 import ui.InteractiveUI;
-
+import ui.InputParser;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class HumanPlayer implements Player {
             ui.showHand(hand);
             ui.promptPlayCard();
             String line = input.readLine();
-            int idx = parseIndex(line, hand.size());
+            int idx = InputParser.parseIndex(line, hand.size());
             return hand.remove(idx);
         } catch (Exception e) {
             // fallback
@@ -57,7 +57,7 @@ public class HumanPlayer implements Player {
             ui.showSubmissions(submissions);
             ui.promptJudgeChoice();
             String line = input.readLine();
-            int idx = parseIndex(line, submissions.size());
+            int idx = InputParser.parseIndex(line, submissions.size());
             return submissions.get(idx);
         } catch (Exception e) {
             return submissions.get(0);
@@ -69,13 +69,5 @@ public class HumanPlayer implements Player {
         return hand;
     }
 
-    // -- helpers --
-    private int parseIndex(String s, int size) {
-        int x = Integer.parseInt(s.trim());
-        if (x < 0) return 0;
-        if (x >= size) return size - 1;
-        return x;
-    }
-    
 
 }

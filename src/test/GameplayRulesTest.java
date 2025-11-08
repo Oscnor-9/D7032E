@@ -27,73 +27,103 @@ public class GameplayRulesTest {
     public void rule7_and_9_allPlayersSubmit() throws Exception {
         Deck<GreenAppleCard> greens = loadGreenDeck();
         Deck<RedAppleCard> reds = loadRedDeck();
-        List<Player> players = List.of(new BotPlayer("Bot 1"), new BotPlayer("Bot 2"), new BotPlayer("Bot 3"));
+        List<Player> players = Arrays.asList(
+                new BotPlayer("Bot 1"),
+                new BotPlayer("Bot 2"),
+                new BotPlayer("Bot 3")
+        );
 
         Game game = new Game(greens, reds, players);
         new ReplenishPhase().execute(game);
         new PlayPhase().execute(game);
 
+        int expected = players.size() - 1;
         assertEquals("All non-judge players should submit 1 card",
-                     players.size() - 1, game.getSubmittedCards().size());
+                     expected, game.getSubmittedCards().size());
+
+        Player judge = game.getCurrentJudge();
+
+        // Judge should NOT have played a card (still 7)
+        assertEquals("Judge should not submit a card", 7, judge.getHand().size());
+
+        // All non-judge players now have 6 cards
+        for (Player p : players) {
+            if (!p.equals(judge)) {
+                assertEquals("Non-judge players should have 6 cards left", 6, p.getHand().size());
+            }
+        }
+
+        // (Optional stronger check) None of the submitted cards belong to the judge
+        for (Card c : game.getSubmittedCards()) {
+            Player owner = game.getOwnerOf(c);
+            assertNotEquals("Judge must not be among submitters", judge, owner);
+        }
     }
 
     @Test
     public void rule8_randomiseSubmissionOrder() throws Exception {
-        Game game = new Game(
-            loadGreenDeck(),
-            loadRedDeck(),
-            Arrays.asList(new BotPlayer("Bot 1"), new BotPlayer("Bot 2"), new BotPlayer("Bot 3"))
+        List<Player> players = Arrays.asList(
+            new BotPlayer("Bot 1"),
+            new BotPlayer("Bot 2"),
+            new BotPlayer("Bot 3")
         );
 
-        // Initial dealing so players have red cards
-        new phase.ReplenishPhase().execute(game);
+        Game game = new Game(loadGreenDeck(), loadRedDeck(), players);
+        new ReplenishPhase().execute(game);
+        new DrawPhase().execute(game);
 
-        // Draw a green card to start the round
-        new phase.DrawPhase().execute(game);
+        List<List<String>> ownerOrders = new ArrayList<>();
 
-        // Capture submissions from multiple runs
-        List<List<Card>> allRuns = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            game.clearSubmissions();
+            new PlayPhase().execute(game);
 
-        for (int i = 0; i < 5; i++) { // repeat to reduce false positives
-            game.clearSubmissions();  // you need a method in Game to reset between runs
-            new phase.PlayPhase().execute(game);
-            allRuns.add(new ArrayList<>(game.getSubmittedCards()));
-        }
-
-        // 1. Check every run has the same set size (one per non-judge player)
-        int expected = game.getPlayers().size() - 1; 
-        for (List<Card> run : allRuns) {
-            assertEquals("Each run must collect one card per player (excluding judge)",
-                         expected, run.size());
-        }
-
-        // 2. Check that across runs, order changes at least once
-        boolean foundDifferentOrder = false;
-        for (int i = 1; i < allRuns.size(); i++) {
-            if (!allRuns.get(0).equals(allRuns.get(i))) {
-                foundDifferentOrder = true;
-                break;
+            // derive owner order from the ordered submissions
+            List<String> owners = new ArrayList<>();
+            for (Card c : game.getSubmittedCards()) {
+                owners.add(game.getOwnerOf(c).getName());
             }
+            ownerOrders.add(owners);
+
+            // keep hands topped up between runs
+            new ReplenishPhase().execute(game);
         }
-        assertTrue("Submissions should not always be in the same order (must be randomized)",
-                   foundDifferentOrder);
+
+        int expected = players.size() - 1;
+        for (List<String> run : ownerOrders) {
+            assertEquals(expected, run.size());
+        }
+
+        boolean varied = ownerOrders.stream().distinct().count() > 1;
+        assertTrue("Submission order should vary across runs", varied);
     }
+
 
 
     @Test
     public void rule10_judgeSelectsWinner() throws Exception {
         Deck<GreenAppleCard> greens = loadGreenDeck();
         Deck<RedAppleCard> reds = loadRedDeck();
-        List<Player> players = List.of(new BotPlayer("Bot 1"), new BotPlayer("Bot 2"));
+        List<Player> players = Arrays.asList(
+                new BotPlayer("Bot 1"),
+                new BotPlayer("Bot 2")
+        );
 
         Game game = new Game(greens, reds, players);
         new ReplenishPhase().execute(game);
         new DrawPhase().execute(game);
         new PlayPhase().execute(game);
+
+        // Before judging: no points
+        for (Player p : players) {
+            assertEquals(0, game.getScore(p));
+        }
+
         new JudgePhase().execute(game);
 
-        // After judge picks, a point must be awarded
-        assertTrue("At least one player must have >=1 point", game.hasWinner() || game.totalPoints() > 0);
+        // After judging: exactly one player should have 1 point
+        long winners = players.stream().filter(p -> game.getScore(p) == 1).count();
+        assertEquals("Exactly one player should receive a point", 1, winners);
     }
 
     @Test

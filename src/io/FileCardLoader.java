@@ -19,7 +19,7 @@ public class FileCardLoader {
         Path filePath = Path.of(fileName).toAbsolutePath();
 
         if (!Files.exists(filePath)) {
-            throw new IOException("❌ File not found: " + filePath);
+            throw new IOException("File not found: " + filePath);
         }
 
         List<String> lines = Files.readAllLines(filePath, Charset.forName("Cp1252"));
