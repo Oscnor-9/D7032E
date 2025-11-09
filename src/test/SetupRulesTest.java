@@ -11,6 +11,10 @@ import static test.TestLoader.*;
 
 import java.util.*;
 
+/**
+ * Tests setup and initalization rules, including loading decks,
+ * shuffling, initial dealing, and random judge selection
+ */
 public class SetupRulesTest {
     @Test
     public void rule1_readGreenApplesFromFile() throws Exception {

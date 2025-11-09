@@ -10,6 +10,11 @@ import java.util.Collections;
 
 import card.Card;
 
+/**
+ * Phase were all the non-judge players choose and submit a red card.
+ * <p>
+ * The order of players is randomised each round before they play
+ */
 public class PlayPhase implements Phase {
     @Override
     public void execute(Game game) {

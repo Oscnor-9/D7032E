@@ -7,9 +7,18 @@ import java.util.List;
 import java.util.function.Function;
 import network.Protocol;
 
+/**
+ * Handles communication from the server to a connected remote client.
+ * <p>
+ * Sends serialized protocol messages over a {@link PrintWriter} stream
+ */
 public class NetworkUI implements GameUI {
     private final PrintWriter out;
 
+    /**
+     * Creates a new network UI using a given output stream
+     * @param out the socket output stream to write protocol messages to
+     */
     public NetworkUI(PrintWriter out) {
         this.out = out;
     }
@@ -47,21 +56,27 @@ public class NetworkUI implements GameUI {
         // do not close here
     }
 
+    /** Sends an end marker indicating all submission are sent */
     public void endSubmissions() {
         out.println(Protocol.END_SUBMISSIONS);
         out.flush();
     }
 
 
-    // ⚡ Extra protocol messages — not part of GameUI
+    /** Prompts the remote player to play a card */
     public void promptPlayCard() {
         out.println(Protocol.YOUR_TURN);
     }
 
+    /** Prompts the remote player to select a winning card */
     public void promptJudgeChoice() {
         out.println(Protocol.JUDGE_TURN);
     }
 
+    /**
+     * Sends the player's hand to the client
+     * @param hand list of cards currently held by the player
+     */
     public void showHand(List<Card> hand) {
         out.println(Protocol.HAND);
         for (int i = 0; i < hand.size(); i++) {

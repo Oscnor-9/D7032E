@@ -5,6 +5,10 @@ import player.Player;
 import card.Card;
 import java.util.ArrayList;
 
+/**
+ * Phase were the current judge selects a winning red apple card
+ * from the submitted cards and a point is awarded 
+ */
 public class JudgePhase implements Phase {
     @Override
     public void execute(Game game) {
@@ -15,7 +19,7 @@ public class JudgePhase implements Phase {
 
         Card winningCard = judge.selectWinner(new ArrayList<>(game.getSubmittedCards()));
 
-        // ✅ Confirm judge has made a choice
+        // Confirm judge has made a choice
         game.broadcast(ui -> ui.showMessage("Judge returned a choice: " + winningCard.getText()));
 
         Player winner = game.getOwnerOf(winningCard);

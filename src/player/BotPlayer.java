@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Random;
 import card.Card;
 
+/**
+ * A simple AI-controlled player that makes random choices.
+ * <p>
+ * The bot randomly plays cards from its hand and, when acting as a judge,
+ * randomly selects a winning card from the submissions.
+ */
 public class BotPlayer implements Player{
 	private String name;
 	private List<Card> hand = new ArrayList<>();

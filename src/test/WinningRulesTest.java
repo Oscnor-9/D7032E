@@ -10,6 +10,10 @@ import static test.TestLoader.*;
 
 import java.util.*;
 
+/**
+ * Tests scroing and winning rules, including point awards
+ * and win condition thresholds based on player count
+ */
 public class WinningRulesTest {
 
 	@Test
@@ -28,9 +32,7 @@ public class WinningRulesTest {
 	    game.setCurrentGreenCard(new GreenAppleCard("Tall")); // ensure a green card exists
 	    game.awardPoint(bot);
 
-	    // ✅ Stronger check: this player has exactly 1 point
 	    assertEquals("Bot should have exactly 1 point after being awarded", 1, game.getScore(bot));
-	    // ✅ Total points should match
 	    assertEquals("Total points should equal 1", 1, game.totalPoints());
 	}
 

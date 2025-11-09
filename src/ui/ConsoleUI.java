@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 
+/**
+ * Console-based implementation of {@link InteractiveUI}
+ * for local human players.
+ * <p>
+ * Display game state, hand contents, and prompts for input
+ * through the standard system console
+ */
 public class ConsoleUI implements InteractiveUI {
     private final Scanner scanner = new Scanner(System.in);
 

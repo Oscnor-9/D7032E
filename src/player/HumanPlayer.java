@@ -7,6 +7,10 @@ import ui.InputParser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A local human-controlled player using an {@link InteractiveUI}
+ * and a {@link ChoiceInput} for interaction
+ */
 public class HumanPlayer implements Player {
     private final String name;
     private final InteractiveUI ui;          // prints only
@@ -19,6 +23,9 @@ public class HumanPlayer implements Player {
         this.input = input;
     }
 
+    /**
+     * Return the UI for this human player
+     */
     public InteractiveUI getUI() {
     	return ui;
     }
@@ -47,6 +54,9 @@ public class HumanPlayer implements Player {
         return name;
     }
 
+    /**
+     * Method to display the current hand to the player
+     */
     public void showHand() {
         ui.showHand(hand);
     }

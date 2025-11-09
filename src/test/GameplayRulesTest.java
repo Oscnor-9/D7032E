@@ -11,6 +11,10 @@ import static test.TestLoader.*;
 
 import java.util.*;
 
+/**
+ * Tests core gameplay rules, including draw, play, judge, submissions,
+ * replenishment and judge rotation.
+ */
 public class GameplayRulesTest {
     @Test
     public void rule6_drawGreenApple() throws Exception {

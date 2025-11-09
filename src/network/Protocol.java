@@ -1,7 +1,16 @@
 package network;
 
-public final class Protocol {
 
+	/**
+	 * Shared protocol constants for text-based messages
+	 * between the server and remote clients.
+	 * <p>
+	 * Both {@link network.GameClient} and {link ui.NetworkUI} should use
+	 * these constants to avoid "magic string" and keep the protocol in sync
+	 */
+
+public final class Protocol {
+		//simple commands
 		public static final String YOUR_TURN = "YOUR_TURN";
 		public static final String JUDGE_TURN = "JUDGE_TURN";
 		public static final String END_SUBMISSIONS = "END_SUBMISSIONS";
@@ -9,9 +18,10 @@ public final class Protocol {
 		public static final String HAND = "HAND";
 		public static final String END_HAND = "END_HAND";
 		
+		//Prefixed messages
 		public static final String WINNER_PREFIX = "WINNER:";
-		public static final String SCORES_PREFIX = "SCORES_PREFIX:";
-		public static final String JUDGE_PREFIX = "JUDGE_PREFIX:";
+		public static final String SCORES_PREFIX = "SCORES:";
+		public static final String JUDGE_PREFIX = "JUDGE:";
 		public static final String GREEN_PREFIX = "GREEN:";
 		public static final String MESSAGE_PREFIX ="MESSAGE:";
 }

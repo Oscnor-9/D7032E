@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a player connected over the network
+ * <p>
+ * Uses a {@link NetworkUI} to send messages to the remote client and a
+ * {@link NetworkInput} to receive their choices
+ */
 public class RemotePlayer implements Player {
     private final String name;
     private final NetworkUI ui;
@@ -22,12 +28,16 @@ public class RemotePlayer implements Player {
         this.input = input;
     }
 
+    /**
+     * Returns the network UI for the remote player
+     */
     public NetworkUI getUI() {
     	return ui;
     }
 
     @Override
-    public Card playCard() {				//Handles the playPhase for the remote connected player
+    public Card playCard() {				
+    	//Handles the playPhase for the remote connected player
         ui.showHand(hand);
         ui.promptPlayCard();
 
@@ -41,7 +51,8 @@ public class RemotePlayer implements Player {
         return hand.remove(idx);
     }
     @Override
-    public Card selectWinner(List<Card> submissions) {	//Handles the JudgePhase for the remote connected Player
+    public Card selectWinner(List<Card> submissions) {	
+    	//Handles the JudgePhase for the remote connected Player
         ui.showSubmissions(submissions);
         ui.promptJudgeChoice();
         ui.endSubmissions();
@@ -55,7 +66,12 @@ public class RemotePlayer implements Player {
         return submissions.get(idx);
     }
     
-    private String safeReadLine(String context) {	//Helper function that read the input from remote player and catches if they disconnect
+    /**
+     * Read a line from the remote player and handles disconnects
+     * @param context a short label describing the current action
+     * @return the read line, or {@code null} if the player disconnected
+     */
+    private String safeReadLine(String context) {	
         try {
             String line = input.readLine();
             if (line == null) {
